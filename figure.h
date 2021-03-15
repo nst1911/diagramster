@@ -1,32 +1,16 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <QObject>
-#include <QXmlStreamAttributes>
+#include "basicobject.h"
 #include <QPointF>
 #include <QSizeF>
-#include <QUuid>
 
 namespace diagramster
 {
 
-// Figure-based class use QObject tree as a tree structure (parents, children, ownership, etc)
-
-// All Figure-based classes must:
-// > have a Q_INVOKABLE constructor
-// > have a virtual destructor
-// > have a registered metatype (you can add registration code to FigureFactory::registerMetaTypes() for convenience)
-
-class Figure : public QObject
+class Figure : public BasicObject
 {
     Q_OBJECT
-
-    // Data that have to be serialized/deserialized
-    // must be declared as Q_PROPERTY and be convertable to QString
-
-    // List properties have to be defined as QStringList
-
-    Q_PROPERTY(QUuid uid READ uid)
 
     Q_PROPERTY(qreal x READ x WRITE setX NOTIFY xChanged)
     Q_PROPERTY(qreal y READ y WRITE setY NOTIFY xChanged)
@@ -40,14 +24,6 @@ public:
                                 const QUuid &uid = QUuid());
 
     virtual ~Figure() {}
-
-    // Default implementation of QObject does not allow to change
-    // the order of children so m_orderIndex and sorted list of children are used
-    QList<Figure*> figureChildren(bool sort = true) const;
-
-    int  orderIndex() const;
-    void setOrderIndex(int index);
-    void clearOrderIndex();
 
     qreal x() const;
     void setX(const qreal &x);
@@ -64,39 +40,19 @@ public:
     bool visible() const;
     void setVisible(bool visible);
 
-    QUuid uid() const;
-
-    constexpr static const char* OBJECT_NAME_PROPERTY_NAME = "objectName";
-    constexpr static const char* UID_PROPERTY_NAME = "uid";
-
 signals:
-    void dataChanged();
-    void orderIndexChanged();
-    void childAdded(Figure* child);
-    void childRemoved(Figure* child);
-
     void xChanged();
     void yChanged();
     void widthChanged();
     void heightChanged();
     void visibleChanged();
 
-protected:
-    virtual void childEvent(QChildEvent *event) override;
-
 private:
-    static const int DEFAULT_ORDER_INDEX = 0;
-    int m_orderIndex = DEFAULT_ORDER_INDEX;
-
-    static bool orderIndexLessThan(Figure* id1, Figure* id2);
-
     qreal m_x = 0.0;
     qreal m_y = 0.0;
     qreal m_width = 0.0;
     qreal m_height = 0.0;
     bool m_visible = true;
-
-    QUuid m_uid;
 };
 
 }

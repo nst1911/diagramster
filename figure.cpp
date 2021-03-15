@@ -3,61 +3,9 @@
 #include <QXmlStreamWriter>
 
 diagramster::Figure::Figure(const QString &name, QObject *parent, const QUuid& uid)
-    : QObject(parent),
-      m_uid(uid.isNull() ? QUuid::createUuid() : uid)
+    : BasicObject(name, parent, uid)
 {
-    setObjectName(name);
-}
 
-QList<diagramster::Figure *> diagramster::Figure::figureChildren(bool sort) const
-{
-    QList<diagramster::Figure*> sorted;
-
-    for (auto object : children())
-        if (auto identity = qobject_cast<Figure*>(object))
-            sorted << identity;
-
-    if (sorted.size() > 1 && sort)
-        std::sort(sorted.begin(), sorted.end(), orderIndexLessThan);
-
-    return sorted;
-}
-
-int diagramster::Figure::orderIndex() const
-{
-    return m_orderIndex;
-}
-
-void diagramster::Figure::setOrderIndex(int index)
-{
-    if (m_orderIndex != index) {
-        m_orderIndex = index;
-        emit orderIndexChanged();
-    }
-}
-
-void diagramster::Figure::clearOrderIndex()
-{
-    setOrderIndex(DEFAULT_ORDER_INDEX);
-}
-
-void diagramster::Figure::childEvent(QChildEvent *event)
-{
-    QObject::childEvent(event);
-
-    auto identity = qobject_cast<Figure*>(event->child());
-    if (!identity) return;
-
-    if (event->added())
-        emit childAdded(identity);
-
-    if (event->removed())
-        emit childRemoved(identity);
-}
-
-bool diagramster::Figure::orderIndexLessThan(diagramster::Figure *id1, diagramster::Figure *id2)
-{
-    return id1->orderIndex() < id2->orderIndex();
 }
 
 bool diagramster::Figure::visible() const
@@ -71,11 +19,6 @@ void diagramster::Figure::setVisible(bool visible)
         m_visible = visible;
         emit visibleChanged();
     }
-}
-
-QUuid diagramster::Figure::uid() const
-{
-    return m_uid;
 }
 
 qreal diagramster::Figure::height() const

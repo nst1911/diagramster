@@ -24,28 +24,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    basicobjectfactory.cpp \
+    basicobjectserializer.cpp \
         main.cpp \
     gui/mainwindow.cpp \
     figure.cpp \
+    test/basicobjectserializertest.cpp \
     test/figuretest.cpp \
-    figurefactory.cpp \
-    figureserializer.cpp \
-    test/figureserializertest.cpp \
     figures/block.cpp \
     test/figures/blocktest.cpp \
-    figures/connectionline.cpp
+    figures/connectionline.cpp \
+    basicobject.cpp \
+    test/basicobjecttest.cpp
 
 HEADERS += \
+    basicobjectfactory.h \
+    basicobjectserializer.h \
     gui/mainwindow.h \
+    test/basicobjectserializertest.h \
     test/tests.h \
     figure.h \
     test/figuretest.h \
-    figurefactory.h \
-    figureserializer.h \
-    test/figureserializertest.h \
     figures/block.h \
     test/figures/blocktest.h \
-    figures/connectionline.h
+    figures/connectionline.h \
+    basicobject.h \
+    test/basicobjecttest.h
 
 FORMS += \
     gui/mainwindow.ui

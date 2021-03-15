@@ -2,13 +2,13 @@
 #include "test/tests.h"
 #include <QApplication>
 
-#include "figurefactory.h"
+#include "basicobjectfactory.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    diagramster::FigureFactory::registerMetaTypes();
+    diagramster::BasicObjectFactory::registerMetaTypes();
 
     diagramster::test::execUnitTests(argc, argv);
 

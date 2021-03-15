@@ -13,9 +13,10 @@ class FigureTest : public QObject
 
 private slots:
     void figureChildren();
-    //void toXml();
-    //void fromXml();
     void childrenSignalsTest();
+
+    void isEqualTo();
+    void isRecursivelyEqualTo();
 };
 
 }
