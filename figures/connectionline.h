@@ -11,8 +11,11 @@ class ConnectionLine : public Figure
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString startConnector READ startConnectorString WRITE setStartConnectorString NOTIFY startConnectorChanged STORED false)
-    Q_PROPERTY(QString endConnector READ endConnectorString WRITE setEndConnectorString NOTIFY endConnectorChanged STORED false)
+    Q_PROPERTY(QUuid startBlockUid READ startBlockUid WRITE setStartBlockUid NOTIFY startBlockChanged STORED false)
+    Q_PROPERTY(QUuid endBlockUid READ endBlockUid WRITE setEndBlockUid NOTIFY endBlockChanged STORED false)
+
+    Q_PROPERTY(int startBlockConnectorId READ startBlockConnectorId WRITE setStartBlockConnectorId NOTIFY startBlockConnectorIdChanged STORED false)
+    Q_PROPERTY(int endBlockConnectorId READ endBlockConnectorId WRITE setEndBlockConnectorId NOTIFY endBlockConnectorIdChanged STORED false)
 
     Q_PROPERTY(int lineWidth READ lineWidth WRITE setLineWidth NOTIFY lineWidthChanged)
     Q_PROPERTY(QColor lineColor READ lineColor WRITE setLineColor NOTIFY lineColorChanged)
@@ -22,17 +25,31 @@ public:
                                         QObject* parent = Q_NULLPTR,
                                         const QUuid& uid = QUuid());
 
-    Block::Connector *startConnector() const;
-    void setStartConnector(Block::Connector *startConnector);
+    Block *startBlock() const;
+    void setStartBlock(Block *startBlock);
+    void setStartBlock(Block *startBlock, int connectorId);
 
-    Block::Connector *endConnector() const;
-    void setEndConnector(Block::Connector *endConnector);
+    Block *endBlock() const;
+    void setEndBlock(Block *endBlock);
+    void setEndBlock(Block *endBlock, int connectorId);
 
-    QString startConnectorString() const;
-    void setStartConnectorString(const QString& str);
+    // setStartBlockUid(), setEndBlockUid() look up the block with UID only
+    // among ConnectionLine's siblings and their children recursively
 
-    QString endConnectorString() const;
-    void setEndConnectorString(const QString& str);
+    QUuid startBlockUid() const;
+    void setStartBlockUid(const QUuid& uid);
+
+    QUuid endBlockUid() const;
+    void setEndBlockUid(const QUuid& uid);
+
+    int startBlockConnectorId() const;
+    void setStartBlockConnectorId(int startBlockConnectorId);
+
+    int endBlockConnectorId() const;
+    void setEndBlockConnectorId(int endBlockConnectorId);
+
+    Block::Connector* startBlockConnector() const;
+    Block::Connector* endBlockConnector() const;
 
     int lineWidth() const;
     void setLineWidth(int lineWidth);
@@ -40,18 +57,28 @@ public:
     QColor lineColor() const;
     void setLineColor(const QColor &lineColor);
 
+    bool isValid() const;
+
 signals:
-    void startConnectorChanged();
-    void endConnectorChanged();
+    void startBlockChanged();
+    void endBlockChanged();
+    void startBlockConnectorIdChanged();
+    void endBlockConnectorIdChanged();
     void lineWidthChanged();
     void lineColorChanged();
 
+protected:
+    Block* getBlockWithUid(const QUuid& uid) const;
+
 private:
-    Block::Connector* m_startConnector = nullptr;
-    Block::Connector* m_endConnector   = nullptr;
+    Block* m_startBlock = nullptr;
+    Block* m_endBlock = nullptr;
+
+    int m_startBlockConnectorId = -1;
+    int m_endBlockConnectorId   = -1;
 
     int m_lineWidth = 1;
-    QColor m_lineColor;
+    QColor m_lineColor = QColor("black");
 };
 
 }

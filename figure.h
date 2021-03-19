@@ -14,8 +14,8 @@ class Figure : public BasicObject
 
     Q_PROPERTY(qreal x READ x WRITE setX NOTIFY xChanged)
     Q_PROPERTY(qreal y READ y WRITE setY NOTIFY xChanged)
-    Q_PROPERTY(qreal width READ width WRITE setWidth NOTIFY xChanged)
-    Q_PROPERTY(qreal height READ height WRITE setHeight NOTIFY xChanged)
+    Q_PROPERTY(qreal width READ width WRITE setWidth NOTIFY widthChanged)
+    Q_PROPERTY(qreal height READ height WRITE setHeight NOTIFY heightChanged)
     Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
 
 public:

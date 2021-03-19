@@ -11,10 +11,7 @@ class FigureTest : public QObject
 {
     Q_OBJECT
 
-private slots:
-    void figureChildren();
-    void childrenSignalsTest();
-
+private slots:;
     void isEqualTo();
     void isRecursivelyEqualTo();
 };

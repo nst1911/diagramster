@@ -1,4 +1,6 @@
 #include "connectionline.h"
+#include <QUuid>
+#include <QDebug>
 
 diagramster::ConnectionLine::ConnectionLine(const QString &name, QObject *parent, const QUuid &uid)
     : Figure(name, parent, uid)
@@ -6,50 +8,103 @@ diagramster::ConnectionLine::ConnectionLine(const QString &name, QObject *parent
 
 }
 
-diagramster::Block::Connector *diagramster::ConnectionLine::startConnector() const
+diagramster::Block *diagramster::ConnectionLine::startBlock() const
 {
-    return m_startConnector;
+    return m_startBlock;
 }
 
-void diagramster::ConnectionLine::setStartConnector(diagramster::Block::Connector *startConnector)
+void diagramster::ConnectionLine::setStartBlock(diagramster::Block *startBlock)
 {
-    if (m_startConnector != startConnector) {
-        m_startConnector = startConnector;
-        emit startConnectorChanged();
+    if (m_startBlock != startBlock && startBlock != endBlock()) {
+        m_startBlock = startBlock;
+        emit startBlockChanged();
     }
 }
 
-diagramster::Block::Connector *diagramster::ConnectionLine::endConnector() const
+void diagramster::ConnectionLine::setStartBlock(diagramster::Block *startBlock, int connectorId)
 {
-    return m_endConnector;
+    setStartBlock(startBlock);
+    setStartBlockConnectorId(connectorId);
 }
 
-void diagramster::ConnectionLine::setEndConnector(diagramster::Block::Connector *endConnector)
+QUuid diagramster::ConnectionLine::startBlockUid() const
 {
-    if (m_endConnector != endConnector) {
-        m_endConnector = endConnector;
-        emit endConnectorChanged();
+    return startBlock() ? startBlock()->uid() : QUuid();
+}
+
+void diagramster::ConnectionLine::setStartBlockUid(const QUuid &uid)
+{
+    if (auto block = getBlockWithUid(uid))
+        setStartBlock(block);
+}
+
+diagramster::Block *diagramster::ConnectionLine::endBlock() const
+{
+    return m_endBlock;
+}
+
+void diagramster::ConnectionLine::setEndBlock(diagramster::Block *endBlock)
+{
+    if (m_endBlock != endBlock && endBlock != startBlock())
+    {
+        m_endBlock = endBlock;
+        emit endBlockChanged();
     }
 }
 
-QString diagramster::ConnectionLine::startConnectorString() const
+void diagramster::ConnectionLine::setEndBlock(diagramster::Block *endBlock, int connectorId)
 {
-    return Block::Connector::toString(startConnector());
+    setEndBlock(endBlock);
+    setEndBlockConnectorId(connectorId);
 }
 
-void diagramster::ConnectionLine::setStartConnectorString(const QString &str)
+QUuid diagramster::ConnectionLine::endBlockUid() const
 {
-    // ...
+    return endBlock() ? endBlock()->uid() : QUuid();
 }
 
-QString diagramster::ConnectionLine::endConnectorString() const
+void diagramster::ConnectionLine::setEndBlockUid(const QUuid &uid)
 {
-    return Block::Connector::toString(endConnector());
+    if (auto block = getBlockWithUid(uid))
+        setEndBlock(block);
 }
 
-void diagramster::ConnectionLine::setEndConnectorString(const QString &str)
+int diagramster::ConnectionLine::startBlockConnectorId() const
 {
-    // ...
+    return m_startBlockConnectorId;
+}
+
+void diagramster::ConnectionLine::setStartBlockConnectorId(int startBlockConnectorId)
+{
+    if (m_startBlockConnectorId != startBlockConnectorId)
+    {
+        m_startBlockConnectorId = startBlockConnectorId;
+        emit startBlockConnectorIdChanged();
+    }
+}
+
+int diagramster::ConnectionLine::endBlockConnectorId() const
+{
+    return m_endBlockConnectorId;
+}
+
+void diagramster::ConnectionLine::setEndBlockConnectorId(int endBlockConnectorId)
+{
+    if (m_endBlockConnectorId != endBlockConnectorId)
+    {
+        m_endBlockConnectorId = endBlockConnectorId;
+        emit endBlockConnectorIdChanged();
+    }
+}
+
+diagramster::Block::Connector *diagramster::ConnectionLine::startBlockConnector() const
+{
+    return startBlock() ? startBlock()->connector(startBlockConnectorId()) : nullptr;
+}
+
+diagramster::Block::Connector *diagramster::ConnectionLine::endBlockConnector() const
+{
+    return endBlock() ? endBlock()->connector(endBlockConnectorId()) : nullptr;
 }
 
 int diagramster::ConnectionLine::lineWidth() const
@@ -59,7 +114,8 @@ int diagramster::ConnectionLine::lineWidth() const
 
 void diagramster::ConnectionLine::setLineWidth(int lineWidth)
 {
-    if (m_lineWidth != lineWidth) {
+    if (m_lineWidth != lineWidth)
+    {
         m_lineWidth = lineWidth;
         emit lineWidthChanged();
     }
@@ -72,10 +128,34 @@ QColor diagramster::ConnectionLine::lineColor() const
 
 void diagramster::ConnectionLine::setLineColor(const QColor &lineColor)
 {
-    if (m_lineColor != lineColor) {
+    if (m_lineColor != lineColor)
+    {
         m_lineColor = lineColor;
-        emit lineWidthChanged();
+        emit lineColorChanged();
     }
 }
 
+bool diagramster::ConnectionLine::isValid() const
+{
+    if (!startBlock() || !endBlock())
+        return false;
 
+    if (!startBlockConnector() || !endBlockConnector())
+        return false;
+
+    return startBlock() != endBlock() && startBlockConnector() != endBlockConnector();
+}
+
+diagramster::Block *diagramster::ConnectionLine::getBlockWithUid(const QUuid &uid) const
+{
+    auto basicObjParent = dynamic_cast<BasicObject*>(parent());
+    if (!basicObjParent) {
+        qWarning() << "ConnectionLine::getBlockWithUid() : (!basicObjParent)";
+        return nullptr;
+    }
+
+    auto block = dynamic_cast<Block*>(basicObjParent->findBasicObjectChild(uid));
+    if (!block) qWarning() << "ConnectionLine::getBlockWithUid() : (!block)";
+
+    return block;
+}

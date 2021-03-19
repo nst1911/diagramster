@@ -62,7 +62,7 @@ private:
     QMap<int, Connector*> m_connectorMap;
 
     int    m_strokeWidth = 1;
-    QColor m_strokeColor;
+    QColor m_strokeColor = QColor("black");
 };
 
 class Block::Connector

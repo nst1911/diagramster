@@ -1,14 +1,13 @@
+#include <QApplication>
 #include "gui/mainwindow.h"
 #include "test/tests.h"
-#include <QApplication>
-
-#include "basicobjectfactory.h"
+#include "basicobjectmetafactory.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    diagramster::BasicObjectFactory::registerMetaTypes();
+    diagramster::BasicObjectMetaFactory::registerMetaTypes();
 
     diagramster::test::execUnitTests(argc, argv);
 
