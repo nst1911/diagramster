@@ -3,6 +3,8 @@
 #include "figures/block.h"
 #include "figures/connectionline.h"
 
+#include "figures/flowchart/variants.h"
+
 diagramster::Diagram *diagramster::test::DiagramTest::diagramExample()
 {
     //              diagram
@@ -65,6 +67,7 @@ diagramster::Diagram *diagramster::test::DiagramTest::diagramExample()
     obj3->setStartBlockConnectorId(0);
     obj3->setEndBlock(obj2);
     obj3->setEndBlockConnectorId(0);
+    obj3->setVariant(flowchart::variants::FLOWLINE);
 
     return diagram;
 }

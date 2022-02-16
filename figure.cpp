@@ -8,6 +8,32 @@ diagramster::Figure::Figure(const QString &name, QObject *parent, const QUuid& u
 
 }
 
+QString diagramster::Figure::variant() const
+{
+    return m_variant;
+}
+
+void diagramster::Figure::setVariant(const QString &variant)
+{
+    if (m_variant != variant) {
+        m_variant = variant;
+        emit variantChanged();
+    }
+}
+
+QString diagramster::Figure::text() const
+{
+    return m_text;
+}
+
+void diagramster::Figure::setText(const QString &text)
+{
+    if (m_text != text) {
+        m_text = text;
+        emit textChanged();
+    }
+}
+
 bool diagramster::Figure::visible() const
 {
     return m_visible;

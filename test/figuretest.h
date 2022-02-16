@@ -11,7 +11,7 @@ class FigureTest : public QObject
 {
     Q_OBJECT
 
-private slots:;
+private slots:
     void isEqualTo();
     void isRecursivelyEqualTo();
 };

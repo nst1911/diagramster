@@ -69,7 +69,7 @@ public:
     constexpr static const char* UID_PROPERTY_NAME = "uid";
 
 signals:
-    void dataChanged();
+    void propertyDataChanged(const QString& propertyName);
     void childAdded(BasicObject* child);
     void childRemoved(BasicObject* child);
     void childMoved(BasicObject* child, int from, int to);

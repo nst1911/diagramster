@@ -55,7 +55,8 @@ HEADERS += \
     test/figures/blocktest.h \
     figures/connectionline.h \
     basicobject.h \
-    test/basicobjecttest.h
+    test/basicobjecttest.h \
+    figures/flowchart/variants.h
 
 FORMS += \
     gui/mainwindow.ui
